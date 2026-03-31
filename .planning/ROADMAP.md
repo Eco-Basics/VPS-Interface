@@ -29,7 +29,13 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Any request without a valid JWT to any HTTP endpoint or WebSocket upgrade is rejected with 401
   4. A new PTY session can be created in a specified VPS directory via the API, and the Claude process appears in `ps aux` on the VPS
   5. Multiple PTY sessions exist simultaneously and remain running after the API client disconnects
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Project scaffolding: package.json, tsconfig.json, Jest config, node-pty mock, and all test stub files
+- [ ] 01-02-PLAN.md — Auth implementation: JWT middleware, login route, and Express app factory
+- [ ] 01-03-PLAN.md — Session registry: SessionRecord types, in-memory Map registry, PTY spawn and kill lifecycle
+- [ ] 01-04-PLAN.md — Server wiring: session router, WebSocket upgrade auth, and server entry point
 
 ### Phase 2: Session Engine
 **Goal**: Sessions are fully persistent across browser disconnects, reconnectable with scrollback replay, and manageable (list, kill) via a REST API — all protected by JWT
@@ -70,7 +76,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Backend Foundation | 0/TBD | Not started | - |
+| 1. Backend Foundation | 0/4 | Planned | - |
 | 2. Session Engine | 0/TBD | Not started | - |
 | 3. Terminal UI | 0/TBD | Not started | - |
 | 4. Shell & Launcher | 0/TBD | Not started | - |
