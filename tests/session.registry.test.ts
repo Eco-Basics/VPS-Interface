@@ -70,7 +70,7 @@ describe('createSession', () => {
 describe('killSession', () => {
   test('calls pty.kill with SIGTERM', () => {
     const record = createSession('/home/user/project');
-    const mockPty = record.pty as ReturnType<typeof makeMockPty>;
+    const mockPty = record.pty as unknown as ReturnType<typeof makeMockPty>;
     killSession(record.id);
     expect(mockPty.kill).toHaveBeenCalledWith('SIGTERM');
   });
@@ -82,7 +82,7 @@ describe('killSession', () => {
 
   test('schedules SIGKILL after 5000ms if process has not exited', () => {
     const record = createSession('/home/user/project');
-    const mockPty = record.pty as ReturnType<typeof makeMockPty>;
+    const mockPty = record.pty as unknown as ReturnType<typeof makeMockPty>;
     killSession(record.id);
     // record.status is still 'running' (onExit not called)
     jest.advanceTimersByTime(5001);
@@ -91,7 +91,7 @@ describe('killSession', () => {
 
   test('does NOT call SIGKILL if process exited before timeout', () => {
     const record = createSession('/home/user/project');
-    const mockPty = record.pty as ReturnType<typeof makeMockPty>;
+    const mockPty = record.pty as unknown as ReturnType<typeof makeMockPty>;
     killSession(record.id);
     record.status = 'exited'; // simulate onExit fired
     jest.advanceTimersByTime(5001);
