@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-session-engine/02-02-PLAN.md
-last_updated: "2026-04-01T15:10:21.312Z"
+stopped_at: Completed 02-session-engine/02-03-PLAN.md
+last_updated: "2026-04-01T15:13:49.827Z"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 14
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # State: Claude VPS Interface
@@ -50,6 +50,7 @@ Plan: 1 of 4
 | Phase 01-backend-foundation P04 | 10m | 2 tasks | 7 files |
 | Phase 02-session-engine P01 | 4min | 3 tasks | 4 files |
 | Phase 02-session-engine P02 | 12 | 3 tasks | 4 files |
+| Phase 02-session-engine P03 | 7m | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,8 @@ Recent decisions affecting current work:
 - [Phase 02-session-engine]: dataDisposable called in exit handler to prevent onData firing after PTY exits
 - [Phase 02-session-engine]: registry-owned clients Set: WS handler adds/removes but never creates or destroys the Set
 - [Phase 02-session-engine]: record.status = exited moved into Phase 2 exit handler for single-handler exit mutation
+- [Phase 02-session-engine]: superwstest .wait(50) needed between sendJson and exec for server message processing timing
+- [Phase 02-session-engine]: buffer replay sent as single joined string before clients.add(ws) for race safety
 
 ### Pending Todos
 
@@ -90,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T15:10:21.307Z
-Stopped at: Completed 02-session-engine/02-02-PLAN.md
+Last session: 2026-04-01T15:13:49.823Z
+Stopped at: Completed 02-session-engine/02-03-PLAN.md
 Resume file: None
