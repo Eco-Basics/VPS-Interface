@@ -1,9 +1,9 @@
 import type * as pty from 'node-pty';
+import type { WebSocket } from 'ws';
 
 /**
  * Internal registry record — includes the pty object for Phase 2 I/O piping.
- * Shape locked in CONTEXT.md: { id, pid, pty, cwd, createdAt, status }
- * Phase 2 (02-02) will extend this with buffer and clients fields — keep extensible.
+ * Phase 2 (02-02) adds buffer (ring buffer of PTY output) and clients (connected WS set).
  */
 export interface SessionRecord {
   id: string;
@@ -12,6 +12,10 @@ export interface SessionRecord {
   cwd: string;
   createdAt: Date;
   status: 'running' | 'exited';
+  /** Ring buffer of PTY output chunks, capped at 1000 entries for reconnect replay. */
+  buffer: string[];
+  /** Active WebSocket clients streaming this session. Owned by the registry. */
+  clients: Set<WebSocket>;
 }
 
 /**
