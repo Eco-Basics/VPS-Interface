@@ -2,6 +2,7 @@ import express, { Application } from 'express';
 import bcrypt from 'bcrypt';
 import { requireAuth } from './auth/auth.middleware';
 import { createAuthRouter } from './auth/auth.router';
+import { sessionRouter } from './sessions/session.router';
 
 const REQUIRED_ENV = ['PASSWORD', 'JWT_SECRET'] as const;
 const BCRYPT_ROUNDS = 12;
@@ -19,16 +20,14 @@ export async function createApp(): Promise<Application> {
   const app = express();
   app.use(express.json());
 
-  // Auth route — exempt from JWT middleware
+  // Auth route — exempt from JWT middleware (must come BEFORE requireAuth)
   app.use('/auth', createAuthRouter(passwordHash));
 
-  // JWT middleware applied to all routes AFTER /auth
+  // All routes below require valid JWT
   app.use(requireAuth);
 
-  // Session routes — placeholder until Plan 03 wires in the real router
-  app.get('/sessions', (_req, res) => {
-    res.json([]);
-  });
+  // Protected session routes
+  app.use('/sessions', sessionRouter);
 
   return app;
 }
