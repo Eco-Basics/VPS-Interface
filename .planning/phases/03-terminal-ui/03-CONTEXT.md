@@ -1,6 +1,6 @@
 # Phase 3: Terminal UI - Context
 
-**Gathered:** 2026-04-01
+**Gathered:** 2026-04-01 (updated 2026-04-01 — idle timer and CDN pinning locked in)
 **Status:** Ready for planning
 
 <domain>
@@ -17,7 +17,7 @@ Covers: TERM-04, TERM-05, TERM-06
 
 ### Tech Stack
 - Vanilla JS + HTML + CSS — no React, no Vue, no build step (locked in PROJECT.md)
-- xterm.js loaded via CDN (xterm@5.x) or bundled as a single JS file — no npm for frontend
+- xterm.js loaded via CDN — **pin to xterm@5.3.0 and xterm-addon-fit@0.8.0** (avoid silent breaking changes from CDN floating version)
 - ws library (Phase 2) handles the WebSocket; frontend uses native browser WebSocket API
 - CSS: hand-written, no Tailwind or framework — keep it small
 
@@ -58,9 +58,14 @@ Covers: TERM-04, TERM-05, TERM-06
 - Error handling: show inline error if POST fails (e.g., invalid cwd)
 
 ### Session Status Indicators (TERM-05)
-- Status stored per-tab in JS state object `{id, label, status: 'running'|'idle'|'exited', ws, terminal}`
-- Status updated: 'exited' on WS exit message; 'idle'/'running' tracking not implemented in v1 (always 'running' until exit) — TERM-05 requires running/idle/exited; idle detection is Phase 3 discretion
-- Idle detection: if no PTY data received for 5 seconds, set status to 'idle'; reset to 'running' on next data
+- Status stored per-tab in JS state object `{id, label, status: 'running'|'idle'|'exited', ws, terminal, idleTimer}`
+- Status updated on three events:
+  1. **PTY data received** → cancel existing idle timer, set status to `'running'`, start new 5 000ms timer
+  2. **5 000ms idle timer fires** → set status to `'idle'` (no data received in last 5 seconds)
+  3. **WS `{"type":"exit"}` message** → cancel idle timer, set status to `'exited'`
+- Implementation: `clearTimeout(session.idleTimer)` on every WS message, then `session.idleTimer = setTimeout(() => setStatus('idle'), 5000)`
+- Timer is cancelled and not restarted when status is already `'exited'`
+- This is a **locked decision** — planner must include idle timer implementation as an explicit task in plan 03-04
 
 ### Authentication in Frontend
 - All API calls include `Authorization: Bearer <token>` header from localStorage
@@ -73,6 +78,7 @@ Covers: TERM-04, TERM-05, TERM-06
 - New session modal animation
 - Tab overflow indicator ("+ N more" badge) if needed
 - Favicon
+- Idle timer threshold can be adjusted (5 000ms is the default; Claude may tune if it proves too sensitive)
 
 </decisions>
 
