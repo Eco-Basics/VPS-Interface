@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-backend-foundation/01-01-PLAN.md
-last_updated: "2026-04-01T13:31:57.379Z"
+stopped_at: Completed 01-backend-foundation/01-04-PLAN.md
+last_updated: "2026-04-01T13:49:34.829Z"
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 14
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # State: Claude VPS Interface
@@ -47,6 +47,7 @@ Plan: 4 of 4
 
 *Updated after each plan completion*
 | Phase 01-backend-foundation P01 | 22m | 3 tasks | 7 files |
+| Phase 01-backend-foundation P04 | 10m | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,8 @@ Recent decisions affecting current work:
 - transformIgnorePatterns excludes uuid from node_modules ignore — uuid v13 is ESM-only, ts-jest must transform it
 - [Phase 01-backend-foundation]: uuid downgraded to v9.0.1 — v13 ESM-only breaks ts-jest CJS preset; v4 API identical
 - [Phase 01-backend-foundation]: node-pty mock wired globally via moduleNameMapper in jest.config.ts — no jest.mock() in test files
+- [Phase 01-backend-foundation]: dotenv loaded via import 'dotenv/config' at top of server.ts — ensures PASSWORD and JWT_SECRET are defined before createApp() reads them
+- [Phase 01-backend-foundation]: tsconfig.json rootDir removed — rootDir: src incompatible with including tests/ directory; outDir: dist retained
 
 ### Pending Todos
 
@@ -79,6 +82,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T13:31:57.374Z
-Stopped at: Completed 01-backend-foundation/01-01-PLAN.md
+Last session: 2026-04-01T13:49:21.252Z
+Stopped at: Completed 01-backend-foundation/01-04-PLAN.md
 Resume file: None

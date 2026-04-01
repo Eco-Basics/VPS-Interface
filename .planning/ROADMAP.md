@@ -12,7 +12,7 @@ Four phases build this system from the inside out. Phase 1 establishes a secured
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Backend Foundation** - Auth, PTY spawning, and in-memory session registry
+- [x] **Phase 1: Backend Foundation** - Auth, PTY spawning, and in-memory session registry (completed 2026-04-01)
 - [ ] **Phase 2: Session Engine** - WebSocket bridge, ring buffer, reconnect, and session management API
 - [ ] **Phase 3: Terminal UI** - xterm.js frontend, tab management, and responsive layout
 - [ ] **Phase 4: Shell & Launcher** - Bash shell tab, saved directories, and session naming
@@ -76,7 +76,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Backend Foundation | 3/4 | In Progress|  |
+| 1. Backend Foundation | 4/4 | Complete   | 2026-04-01 |
 | 2. Session Engine | 0/TBD | Not started | - |
 | 3. Terminal UI | 0/TBD | Not started | - |
 | 4. Shell & Launcher | 0/TBD | Not started | - |
