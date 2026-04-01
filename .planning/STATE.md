@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-04-01T13:31:29.822Z"
+stopped_at: Completed 01-backend-foundation/01-01-PLAN.md
+last_updated: "2026-04-01T13:31:57.379Z"
 progress:
   total_phases: 4
   completed_phases: 0
@@ -66,6 +66,8 @@ Recent decisions affecting current work:
 - Session records never deleted from Map — status transitions to 'exited' in-place for Phase 2 reconnect inspection
 - CLAUDE_CONFIG_DIR set per-session (/tmp/claude-sessions/{id}) — prevents concurrent session transcript corruption
 - transformIgnorePatterns excludes uuid from node_modules ignore — uuid v13 is ESM-only, ts-jest must transform it
+- [Phase 01-backend-foundation]: uuid downgraded to v9.0.1 — v13 ESM-only breaks ts-jest CJS preset; v4 API identical
+- [Phase 01-backend-foundation]: node-pty mock wired globally via moduleNameMapper in jest.config.ts — no jest.mock() in test files
 
 ### Pending Todos
 
@@ -77,6 +79,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T13:27:38Z
-Stopped at: Completed 01-03-PLAN.md
-Resume file: .planning/phases/01-backend-foundation/01-04-PLAN.md
+Last session: 2026-04-01T13:31:57.374Z
+Stopped at: Completed 01-backend-foundation/01-01-PLAN.md
+Resume file: None
