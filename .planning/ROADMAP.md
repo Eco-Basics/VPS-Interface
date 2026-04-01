@@ -76,7 +76,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Backend Foundation | 0/4 | Planned | - |
+| 1. Backend Foundation | 1/4 | In Progress|  |
 | 2. Session Engine | 0/TBD | Not started | - |
 | 3. Terminal UI | 0/TBD | Not started | - |
 | 4. Shell & Launcher | 0/TBD | Not started | - |

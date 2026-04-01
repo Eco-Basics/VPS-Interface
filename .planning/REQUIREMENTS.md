@@ -7,9 +7,9 @@
 
 ### Authentication
 
-- [ ] **AUTH-01**: User can log in with a password from any browser
-- [ ] **AUTH-02**: User session token persists across browser refresh (JWT stored client-side)
-- [ ] **AUTH-03**: All HTTP endpoints and WebSocket connections require a valid JWT
+- [x] **AUTH-01**: User can log in with a password from any browser
+- [x] **AUTH-02**: User session token persists across browser refresh (JWT stored client-side)
+- [x] **AUTH-03**: All HTTP endpoints and WebSocket connections require a valid JWT
 
 ### PTY & Sessions
 
@@ -65,9 +65,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
+| AUTH-01 | Phase 1 | Complete |
+| AUTH-02 | Phase 1 | Complete |
+| AUTH-03 | Phase 1 | Complete |
 | SESS-01 | Phase 1 | Pending |
 | SESS-02 | Phase 1 | Pending |
 | SESS-03 | Phase 2 | Pending |
