@@ -45,15 +45,42 @@ export function createSession(cwd: string): SessionRecord {
     cwd,
     createdAt: new Date(),
     status: 'running',
+    buffer: [],
+    clients: new Set(),
   };
 
   // Register BEFORE returning — PTY is owned by registry from this point forward.
   registry.set(id, record);
 
-  // Update status in-place on exit; do NOT delete from Map.
-  // Phase 2 needs to inspect exited sessions (for reconnect decisions).
-  ptyProcess.onExit(() => {
+  // One-time onData registration: buffer PTY output and fan-out to connected clients.
+  const dataDisposable = ptyProcess.onData((chunk: string) => {
+    record.buffer.push(chunk);
+    if (record.buffer.length > 1000) {
+      record.buffer.shift();
+    }
+
+    for (const client of record.clients) {
+      if (client.readyState === client.OPEN) {
+        client.send(chunk);
+      }
+    }
+  });
+
+  // Exit handler: broadcast exit envelope, close clients, dispose subscriptions.
+  const exitDisposable = ptyProcess.onExit(({ exitCode }) => {
     record.status = 'exited';
+    dataDisposable.dispose();
+
+    const payload = JSON.stringify({ type: 'exit', exitCode });
+    for (const client of record.clients) {
+      if (client.readyState === client.OPEN) {
+        client.send(payload);
+        client.close();
+      }
+    }
+
+    record.clients.clear();
+    exitDisposable.dispose();
   });
 
   return record;
