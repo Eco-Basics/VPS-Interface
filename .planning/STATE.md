@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-backend-foundation/01-04-PLAN.md
-last_updated: "2026-04-01T13:49:34.829Z"
+stopped_at: Completed 02-session-engine/02-01-PLAN.md
+last_updated: "2026-04-01T15:10:08.040Z"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 14
-  completed_plans: 4
+  completed_plans: 6
 ---
 
 # State: Claude VPS Interface
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Full Claude Code interactivity from any device, anywhere
-**Current focus:** Phase 01 — backend-foundation
+**Current focus:** Phase 02 — Session Engine
 
 ## Current Position
 
-Phase: 01 (backend-foundation) — EXECUTING
-Plan: 4 of 4
+Phase: 02 (Session Engine) — EXECUTING
+Plan: 1 of 4
 
 ## Performance Metrics
 
@@ -48,6 +48,8 @@ Plan: 4 of 4
 *Updated after each plan completion*
 | Phase 01-backend-foundation P01 | 22m | 3 tasks | 7 files |
 | Phase 01-backend-foundation P04 | 10m | 2 tasks | 7 files |
+| Phase 02-session-engine P01 | 4min | 3 tasks | 4 files |
+| Phase 02-session-engine P02 | 12 | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -71,6 +73,10 @@ Recent decisions affecting current work:
 - [Phase 01-backend-foundation]: node-pty mock wired globally via moduleNameMapper in jest.config.ts — no jest.mock() in test files
 - [Phase 01-backend-foundation]: dotenv loaded via import 'dotenv/config' at top of server.ts — ensures PASSWORD and JWT_SECRET are defined before createApp() reads them
 - [Phase 01-backend-foundation]: tsconfig.json rootDir removed — rootDir: src incompatible with including tests/ directory; outDir: dist retained
+- [Phase 02-session-engine]: node-pty mock returns IDisposable { dispose: jest.fn() } from onData/onExit — matches real node-pty API contract for session registry cleanup
+- [Phase 02-session-engine]: getMockPtyInstance() throws if no instance created — fail-fast behavior catches tests forgetting to trigger PTY spawn
+- [Phase 02-session-engine]: lastMockPtyInstance module-level var updated on each spawn() — gives tests access to most recent PTY without import coupling
+- [Phase 02-session-engine]: dataDisposable called in exit handler to prevent onData firing after PTY exits
 
 ### Pending Todos
 
@@ -82,6 +88,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T13:49:21.252Z
-Stopped at: Completed 01-backend-foundation/01-04-PLAN.md
+Last session: 2026-04-01T15:09:26.015Z
+Stopped at: Completed 02-session-engine/02-01-PLAN.md
 Resume file: None
