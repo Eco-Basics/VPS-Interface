@@ -1,33 +1,43 @@
-// Manual mock for node-pty — prevents real PTY/claude process spawning in tests.
-// All session tests must import this mock via jest.config.ts moduleNameMapper.
+type DataListener = (data: string) => void;
+type ExitListener = (event: { exitCode: number }) => void;
 
-export interface IPty {
-  pid: number;
-  process: string;
-  onData: jest.MockedFunction<(callback: (data: string) => void) => void>;
-  onExit: jest.MockedFunction<(callback: (exitCode: { exitCode: number; signal?: number }) => void) => void>;
-  write: jest.MockedFunction<(data: string) => void>;
-  resize: jest.MockedFunction<(cols: number, rows: number) => void>;
-  kill: jest.MockedFunction<(signal?: string) => void>;
-  pause: jest.MockedFunction<() => void>;
-  resume: jest.MockedFunction<() => void>;
-}
+let lastMockPtyInstance: ReturnType<typeof makeMockPty> | null = null;
 
-function makeMockPty(overrides: Partial<IPty> = {}): IPty {
-  return {
+export function makeMockPty() {
+  let dataListener: DataListener | null = null;
+  let exitListener: ExitListener | null = null;
+
+  const mockPty = {
     pid: 12345,
-    process: 'claude',
-    onData: jest.fn(),
-    onExit: jest.fn(),
+    kill: jest.fn(),
     write: jest.fn(),
     resize: jest.fn(),
-    kill: jest.fn(),
-    pause: jest.fn(),
-    resume: jest.fn(),
-    ...overrides,
+    onData: jest.fn((listener: DataListener) => {
+      dataListener = listener;
+      return { dispose: jest.fn() };
+    }),
+    onExit: jest.fn((listener: ExitListener) => {
+      exitListener = listener;
+      return { dispose: jest.fn() };
+    }),
+    _emitData(data: string) {
+      dataListener?.(data);
+    },
+    _emitExit(code: number) {
+      exitListener?.({ exitCode: code });
+    },
   };
+
+  lastMockPtyInstance = mockPty;
+  return mockPty;
 }
 
-export const spawn = jest.fn((_file: string, _args: string[], _options: object) => makeMockPty());
+export const spawn = jest.fn(() => makeMockPty());
 
-export { makeMockPty };
+export function getMockPtyInstance() {
+  if (!lastMockPtyInstance) {
+    throw new Error('Mock PTY instance has not been created yet');
+  }
+
+  return lastMockPtyInstance;
+}
