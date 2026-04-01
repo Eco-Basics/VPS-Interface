@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: "Completed 01-02-PLAN.md"
-last_updated: "2026-04-01T13:14:54Z"
+stopped_at: Completed 01-03-PLAN.md
+last_updated: "2026-04-01T13:31:29.822Z"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 14
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # State: Claude VPS Interface
@@ -24,28 +24,29 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 01 (backend-foundation) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 2
-- Average duration: 6m
-- Total execution time: ~12m
+- Total plans completed: 3
+- Average duration: ~12m
+- Total execution time: ~37m
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 | 2 | ~12m | ~6m |
+| 01 | 3 | ~37m | ~12m |
 
 **Recent Trend:**
 
-- Last 5 plans: 01-01, 01-02
+- Last 5 plans: 01-01, 01-02, 01-03
 - Trend: on track
 
 *Updated after each plan completion*
+| Phase 01-backend-foundation P01 | 22m | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -61,6 +62,10 @@ Recent decisions affecting current work:
 - createApp() async factory pattern — avoids async mount race condition in tests; tests call createApp() in beforeAll
 - requireAuth applied after /auth mount so login route is exempt without special exclusion logic
 - passwordHash injected into createAuthRouter — avoids module-level side effects and per-request re-hashing
+- SessionRecord stored in module-level Map — PTY owned by registry, not request handler (enables SESS-02 session survival across browser close)
+- Session records never deleted from Map — status transitions to 'exited' in-place for Phase 2 reconnect inspection
+- CLAUDE_CONFIG_DIR set per-session (/tmp/claude-sessions/{id}) — prevents concurrent session transcript corruption
+- transformIgnorePatterns excludes uuid from node_modules ignore — uuid v13 is ESM-only, ts-jest must transform it
 
 ### Pending Todos
 
@@ -72,6 +77,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T13:14:54Z
-Stopped at: Completed 01-02-PLAN.md
-Resume file: .planning/phases/01-backend-foundation/01-03-PLAN.md
+Last session: 2026-04-01T13:27:38Z
+Stopped at: Completed 01-03-PLAN.md
+Resume file: .planning/phases/01-backend-foundation/01-04-PLAN.md

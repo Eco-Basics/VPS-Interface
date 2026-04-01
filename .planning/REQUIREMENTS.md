@@ -13,10 +13,10 @@
 
 ### PTY & Sessions
 
-- [ ] **SESS-01**: User can spawn a Claude Code session in a specified VPS directory
-- [ ] **SESS-02**: Session survives browser close — Claude process keeps running server-side
+- [x] **SESS-01**: User can spawn a Claude Code session in a specified VPS directory
+- [x] **SESS-02**: Session survives browser close — Claude process keeps running server-side
 - [ ] **SESS-03**: User can reconnect to a running session and see recent output (scrollback replay via ring buffer)
-- [ ] **SESS-04**: User can run multiple concurrent sessions simultaneously
+- [x] **SESS-04**: User can run multiple concurrent sessions simultaneously
 - [ ] **SESS-05**: User can kill/close a session with graceful shutdown (SIGTERM before SIGKILL)
 
 ### Terminal UI
@@ -68,10 +68,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-01 | Phase 1 | Complete |
 | AUTH-02 | Phase 1 | Complete |
 | AUTH-03 | Phase 1 | Complete |
-| SESS-01 | Phase 1 | Pending |
-| SESS-02 | Phase 1 | Pending |
+| SESS-01 | Phase 1 | Complete |
+| SESS-02 | Phase 1 | Complete |
 | SESS-03 | Phase 2 | Pending |
-| SESS-04 | Phase 1 | Pending |
+| SESS-04 | Phase 1 | Complete |
 | SESS-05 | Phase 2 | Pending |
 | TERM-01 | Phase 2 | Pending |
 | TERM-02 | Phase 2 | Pending |
