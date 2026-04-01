@@ -5,7 +5,7 @@ import {
   listSessions,
   _clearRegistryForTests,
 } from '../src/sessions/session.registry';
-import { spawn as mockSpawn, makeMockPty } from './__mocks__/node-pty';
+import { spawn as mockSpawn, makeMockPty, getMockPtyInstance } from './__mocks__/node-pty';
 import type { SessionListItem } from '../src/sessions/session.types';
 
 // node-pty is mocked via jest.config.ts moduleNameMapper — no jest.mock() needed
@@ -124,5 +124,87 @@ describe('listSessions', () => {
     createSession('/home/user/project');
     const list = listSessions();
     expect(list[0]).not.toHaveProperty('pty');
+  });
+});
+
+describe('Phase 2: ring buffer and client tracking', () => {
+  test('SESS-03: createSession initializes buffer as an empty array', () => {
+    const record = createSession('/home/user/project');
+    expect(record.buffer).toBeDefined();
+    expect(Array.isArray(record.buffer)).toBe(true);
+    expect(record.buffer).toHaveLength(0);
+  });
+
+  test('SESS-03: createSession initializes clients as a Set', () => {
+    const record = createSession('/home/user/project');
+    expect(record.clients).toBeDefined();
+    expect(record.clients).toBeInstanceOf(Set);
+    expect(record.clients.size).toBe(0);
+  });
+
+  test('SESS-05: buffer is populated when mock PTY emits data', () => {
+    const record = createSession('/home/user/project');
+    const mockPty = getMockPtyInstance();
+    mockPty._emitData('hello world');
+    expect(record.buffer).toContain('hello world');
+    expect(record.buffer).toHaveLength(1);
+  });
+
+  test('SESS-05: buffer evicts oldest entry after 1000 chunks (ring buffer cap)', () => {
+    const record = createSession('/home/user/project');
+    const mockPty = getMockPtyInstance();
+    // Fill to 1000
+    for (let i = 0; i < 1000; i++) {
+      mockPty._emitData(`chunk-${i}`);
+    }
+    expect(record.buffer).toHaveLength(1000);
+    // Push the 1001st — should evict chunk-0
+    mockPty._emitData('chunk-1000');
+    expect(record.buffer).toHaveLength(1000);
+    expect(record.buffer[0]).toBe('chunk-1');
+    expect(record.buffer[999]).toBe('chunk-1000');
+  });
+
+  test('TERM-01: PTY data is broadcast to connected clients', () => {
+    const record = createSession('/home/user/project');
+    const mockPty = getMockPtyInstance();
+    const client = {
+      OPEN: 1,
+      readyState: 1,
+      send: jest.fn(),
+      close: jest.fn(),
+    } as unknown as import('ws').WebSocket;
+    record.clients.add(client);
+    mockPty._emitData('output data');
+    expect(client.send).toHaveBeenCalledWith('output data');
+  });
+
+  test('TERM-02: exit emits JSON payload with type and exitCode to connected clients', () => {
+    const record = createSession('/home/user/project');
+    const mockPty = getMockPtyInstance();
+    const client = {
+      OPEN: 1,
+      readyState: 1,
+      send: jest.fn(),
+      close: jest.fn(),
+    } as unknown as import('ws').WebSocket;
+    record.clients.add(client);
+    mockPty._emitExit(0);
+    expect(client.send).toHaveBeenCalledWith(JSON.stringify({ type: 'exit', exitCode: 0 }));
+  });
+
+  test('TERM-03: exit closes all connected clients and clears clients set', () => {
+    const record = createSession('/home/user/project');
+    const mockPty = getMockPtyInstance();
+    const client = {
+      OPEN: 1,
+      readyState: 1,
+      send: jest.fn(),
+      close: jest.fn(),
+    } as unknown as import('ws').WebSocket;
+    record.clients.add(client);
+    mockPty._emitExit(1);
+    expect(client.close).toHaveBeenCalled();
+    expect(record.clients.size).toBe(0);
   });
 });
