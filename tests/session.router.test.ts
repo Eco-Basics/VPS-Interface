@@ -5,6 +5,7 @@
 
 import request from 'supertest';
 import { Application } from 'express';
+import * as sessionRegistry from '../src/sessions/session.registry';
 import { _clearRegistryForTests } from '../src/sessions/session.registry';
 import { spawn as mockSpawn, makeMockPty } from './__mocks__/node-pty';
 
@@ -52,6 +53,41 @@ describe('POST /sessions', () => {
       .send({});
     expect(res.status).toBe(400);
     expect(res.body).toHaveProperty('error');
+  });
+
+  test('POST /sessions with bash command returns 201', async () => {
+    const res = await request(app)
+      .post('/sessions')
+      .set('Authorization', `Bearer ${validToken}`)
+      .send({ cwd: '/tmp', command: 'bash' });
+
+    expect(res.status).toBe(201);
+    expect(res.body.status).toBe('running');
+  });
+
+  test('POST /sessions with invalid command returns 400 and does not create session', async () => {
+    const createSessionSpy = jest.spyOn(sessionRegistry, 'createSession');
+
+    const res = await request(app)
+      .post('/sessions')
+      .set('Authorization', `Bearer ${validToken}`)
+      .send({ cwd: '/tmp', command: 'rm -rf /' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('Invalid command: rm -rf /');
+    expect(createSessionSpy).not.toHaveBeenCalled();
+
+    createSessionSpy.mockRestore();
+  });
+
+  test('POST /sessions without command remains backwards compatible', async () => {
+    const res = await request(app)
+      .post('/sessions')
+      .set('Authorization', `Bearer ${validToken}`)
+      .send({ cwd: '/tmp' });
+
+    expect(res.status).toBe(201);
+    expect(res.body.status).toBe('running');
   });
 
   test('AUTH-03: POST /sessions without token returns 401', async () => {

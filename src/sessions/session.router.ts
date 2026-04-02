@@ -3,18 +3,25 @@ import { createSession, getSession, killSession, listSessions } from './session.
 import { toListItem } from './session.types';
 
 export const sessionRouter = Router();
+const CLAUDE_CMD = process.env.CLAUDE_CMD ?? 'claude';
+const ALLOWED_COMMANDS = ['bash', CLAUDE_CMD];
 
 // POST /sessions — spawn a new PTY session
 sessionRouter.post('/', (req, res) => {
-  const { cwd } = req.body as { cwd?: string };
+  const { cwd, command } = req.body as { cwd?: string; command?: string };
 
   if (!cwd) {
     res.status(400).json({ error: 'cwd field is required' });
     return;
   }
 
+  if (command && !ALLOWED_COMMANDS.includes(command)) {
+    res.status(400).json({ error: `Invalid command: ${command}` });
+    return;
+  }
+
   try {
-    const record = createSession(cwd);
+    const record = createSession(cwd, command);
     res.status(201).json(toListItem(record));
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Failed to spawn session';
