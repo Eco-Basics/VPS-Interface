@@ -15,18 +15,18 @@
 
 - [x] **SESS-01**: User can spawn a Claude Code session in a specified VPS directory
 - [x] **SESS-02**: Session survives browser close — Claude process keeps running server-side
-- [ ] **SESS-03**: User can reconnect to a running session and see recent output (scrollback replay via ring buffer)
+- [x] **SESS-03**: User can reconnect to a running session and see recent output (scrollback replay via ring buffer)
 - [x] **SESS-04**: User can run multiple concurrent sessions simultaneously
-- [ ] **SESS-05**: User can kill/close a session with graceful shutdown (SIGTERM before SIGKILL)
+- [x] **SESS-05**: User can kill/close a session with graceful shutdown (SIGTERM before SIGKILL)
 
 ### Terminal UI
 
-- [ ] **TERM-01**: Terminal renders full ANSI color and formatting via xterm.js
-- [ ] **TERM-02**: All Claude interactive prompts work correctly (approve/deny, diffs, menus, slash commands)
-- [ ] **TERM-03**: Terminal resizes correctly when browser window or viewport changes (SIGWINCH propagated)
-- [ ] **TERM-04**: User can manage sessions via tabs (create, switch, close)
-- [ ] **TERM-05**: Each tab shows session status (running / idle / exited)
-- [ ] **TERM-06**: Interface is usable on mobile and desktop (responsive layout)
+- [x] **TERM-01**: Terminal renders full ANSI color and formatting via xterm.js
+- [x] **TERM-02**: All Claude interactive prompts work correctly (approve/deny, diffs, menus, slash commands)
+- [x] **TERM-03**: Terminal resizes correctly when browser window or viewport changes (SIGWINCH propagated)
+- [x] **TERM-04**: User can manage sessions via tabs (create, switch, close)
+- [x] **TERM-05**: Each tab shows session status (running / idle / exited)
+- [x] **TERM-06**: Interface is usable on mobile and desktop (responsive layout)
 
 ### Shell & Launcher
 
@@ -70,15 +70,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-03 | Phase 1 | Complete |
 | SESS-01 | Phase 1 | Complete |
 | SESS-02 | Phase 1 | Complete |
-| SESS-03 | Phase 2 | Pending |
+| SESS-03 | Phase 2 | Complete |
 | SESS-04 | Phase 1 | Complete |
-| SESS-05 | Phase 2 | Pending |
-| TERM-01 | Phase 2 | Pending |
-| TERM-02 | Phase 2 | Pending |
-| TERM-03 | Phase 2 | Pending |
-| TERM-04 | Phase 3 | Pending |
-| TERM-05 | Phase 3 | Pending |
-| TERM-06 | Phase 3 | Pending |
+| SESS-05 | Phase 2 | Complete |
+| TERM-01 | Phase 2 | Complete |
+| TERM-02 | Phase 2 | Complete |
+| TERM-03 | Phase 2 | Complete |
+| TERM-04 | Phase 3 | Complete |
+| TERM-05 | Phase 3 | Complete |
+| TERM-06 | Phase 3 | Complete |
 | SHLL-01 | Phase 4 | Pending |
 | SHLL-02 | Phase 4 | Pending |
 | SHLL-03 | Phase 4 | Pending |

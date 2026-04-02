@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-session-engine/02-04-PLAN.md
-last_updated: "2026-04-02T09:11:06.998Z"
+stopped_at: Completed 03-terminal-ui/03-01-PLAN.md
+last_updated: "2026-04-02T09:20:53.917Z"
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 14
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # State: Claude VPS Interface
@@ -23,8 +23,8 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 
 ## Current Position
 
-Phase: 02 (Session Engine) — COMPLETE
-Plan: 4 of 4 (complete)
+Phase: 03 (Terminal UI) — EXECUTING
+Plan: 1 of 4
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Plan: 4 of 4 (complete)
 | Phase 02-session-engine P02 | 12 | 3 tasks | 4 files |
 | Phase 02-session-engine P03 | 7m | 2 tasks | 2 files |
 | Phase 02-session-engine P04 | 6m | 4 tasks | 3 files |
+| Phase 03-terminal-ui P01 | 5m | 4 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,8 @@ Recent decisions affecting current work:
 - [Phase 02-session-engine]: buffer replay sent as single joined string before clients.add(ws) for race safety
 - [Phase 02-session-engine]: attachWebSocketAuth takes (server, wss) — wss injected so server.ts controls shared instance lifetime
 - [Phase 02-session-engine]: sessionId validated in upgrade handler before handleUpgrade fires — rejects at TCP level before any WS frame sent
+- [Phase 03-terminal-ui]: CDN tags pinned to xterm@5.3.0 and xterm-addon-fit@0.8.0 (exact versions)
+- [Phase 03-terminal-ui]: express.static mounted before /auth and requireAuth so frontend is publicly accessible
 
 ### Pending Todos
 
@@ -96,6 +99,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T03:41:50Z
-Stopped at: Completed 02-session-engine/02-04-PLAN.md
+Last session: 2026-04-02T09:20:53.911Z
+Stopped at: Completed 03-terminal-ui/03-01-PLAN.md
 Resume file: None
