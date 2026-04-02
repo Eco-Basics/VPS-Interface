@@ -172,6 +172,38 @@ window.addEventListener('resize', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Mobile toolbar
+// ---------------------------------------------------------------------------
+
+document.getElementById('mobile-toolbar').addEventListener('click', (event) => {
+  const button = event.target.closest('[data-key]');
+  if (!button) return;
+
+  const activeSession = state.sessions.find((item) => item.id === state.activeSessionId);
+  if (!activeSession) return;
+
+  const sequences = {
+    'ctrl-c': '\x03',
+    esc: '\x1b',
+    tab: '\t',
+    up: '\x1b[A',
+    down: '\x1b[B',
+  };
+
+  if (button.dataset.key === 'keyboard') {
+    activeSession.terminal.textarea?.focus();
+    return;
+  }
+
+  const data = sequences[button.dataset.key];
+  if (!data) return;
+
+  if (activeSession.ws && activeSession.ws.readyState === WebSocket.OPEN) {
+    activeSession.ws.send(JSON.stringify({ type: 'input', data }));
+  }
+});
+
+// ---------------------------------------------------------------------------
 // Tab management
 // ---------------------------------------------------------------------------
 
