@@ -78,5 +78,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Backend Foundation | 4/4 | Complete    | 2026-04-01 |
 | 2. Session Engine | 4/4 | Complete   | 2026-04-02 |
-| 3. Terminal UI | 1/4 | In Progress|  |
+| 3. Terminal UI | 2/4 | In Progress|  |
 | 4. Shell & Launcher | 0/TBD | Not started | - |
