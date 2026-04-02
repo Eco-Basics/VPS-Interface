@@ -25,12 +25,13 @@
   <div id="terminal-view" hidden>
 
     <!-- Tab bar -->
-    <div class="tab-bar" id="tab-bar">
+    <div class="tab-bar">
+      <div id="tab-list" class="tab-list"></div>
       <button id="new-session-btn" class="new-session-btn" onclick="newSession()">+ New Session</button>
     </div>
 
     <!-- Terminal panels are injected here by app.js -->
-    <div id="terminals-container"></div>
+    <div id="terminal-panels"></div>
 
     <!-- Mobile toolbar -->
     <div id="mobile-toolbar" class="mobile-toolbar">
@@ -52,9 +53,14 @@
         <form id="new-session-form">
           <label for="cwd-input">Working Directory</label>
           <input id="cwd-input" type="text" placeholder="/home/user" value="">
+          <fieldset class="session-type-group">
+            <legend>Session Type</legend>
+            <label><input type="radio" name="session-type" value="claude" checked> Claude</label>
+            <label><input type="radio" name="session-type" value="bash"> Bash</label>
+          </fieldset>
           <p id="modal-error" class="modal-error" hidden></p>
           <div class="modal-actions">
-            <button type="button" id="modal-cancel-btn">Cancel</button>
+            <button type="button" id="new-session-cancel">Cancel</button>
             <button type="submit">Start Session</button>
           </div>
         </form>
