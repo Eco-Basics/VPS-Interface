@@ -58,13 +58,18 @@ function sendUpgradeRequest(path: string, token: string | null): Promise<string>
       );
     });
     let response = '';
+    let timer: ReturnType<typeof setTimeout>;
+    const done = () => {
+      clearTimeout(timer);
+      resolve(response);
+    };
     socket.on('data', (chunk) => {
       response += chunk.toString();
       socket.destroy();
     });
-    socket.on('close', () => resolve(response));
-    socket.on('error', reject);
-    setTimeout(() => { socket.destroy(); resolve(response); }, 1000);
+    socket.on('close', done);
+    socket.on('error', (err) => { clearTimeout(timer); reject(err); });
+    timer = setTimeout(() => { socket.destroy(); resolve(response); }, 1000);
   });
 }
 
