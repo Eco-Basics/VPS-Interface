@@ -148,6 +148,30 @@ function connectWebSocket(session) {
 }
 
 // ---------------------------------------------------------------------------
+// Resize propagation (debounced)
+// ---------------------------------------------------------------------------
+
+let resizeTimer = null;
+
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    const activeSession = state.sessions.find((item) => item.id === state.activeSessionId);
+    if (!activeSession) return;
+
+    activeSession.fitAddon.fit();
+
+    if (activeSession.ws && activeSession.ws.readyState === WebSocket.OPEN) {
+      activeSession.ws.send(JSON.stringify({
+        type: 'resize',
+        cols: activeSession.terminal.cols,
+        rows: activeSession.terminal.rows,
+      }));
+    }
+  }, 100);
+});
+
+// ---------------------------------------------------------------------------
 // Tab management
 // ---------------------------------------------------------------------------
 
