@@ -326,8 +326,12 @@ document.getElementById('new-session-form').addEventListener('submit', async (ev
     body: JSON.stringify(body),
   });
 
-  const session = await response.json();
-  const record = createTab(session);
+  const data = await response.json();
+  if (!response.ok) {
+    alert(data.error || 'Failed to create session');
+    return;
+  }
+  const record = createTab(data);
   document.getElementById('new-session-modal').hidden = true;
   connectWebSocket(record);
 });
