@@ -7,9 +7,9 @@ stopped_at: Completed 02-session-engine/02-03-PLAN.md
 last_updated: "2026-04-01T15:13:49.827Z"
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 14
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 # State: Claude VPS Interface
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Full Claude Code interactivity from any device, anywhere
-**Current focus:** Phase 02 — Session Engine
+**Current focus:** Phase 03 — Terminal UI
 
 ## Current Position
 
-Phase: 02 (Session Engine) — EXECUTING
-Plan: 1 of 4
+Phase: 02 (Session Engine) — COMPLETE
+Plan: 4 of 4 (complete)
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ Plan: 1 of 4
 | Phase 02-session-engine P01 | 4min | 3 tasks | 4 files |
 | Phase 02-session-engine P02 | 12 | 3 tasks | 4 files |
 | Phase 02-session-engine P03 | 7m | 2 tasks | 2 files |
+| Phase 02-session-engine P04 | 6m | 4 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -82,6 +83,8 @@ Recent decisions affecting current work:
 - [Phase 02-session-engine]: record.status = exited moved into Phase 2 exit handler for single-handler exit mutation
 - [Phase 02-session-engine]: superwstest .wait(50) needed between sendJson and exec for server message processing timing
 - [Phase 02-session-engine]: buffer replay sent as single joined string before clients.add(ws) for race safety
+- [Phase 02-session-engine]: attachWebSocketAuth takes (server, wss) — wss injected so server.ts controls shared instance lifetime
+- [Phase 02-session-engine]: sessionId validated in upgrade handler before handleUpgrade fires — rejects at TCP level before any WS frame sent
 
 ### Pending Todos
 
@@ -93,6 +96,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T15:13:49.823Z
-Stopped at: Completed 02-session-engine/02-03-PLAN.md
+Last session: 2026-04-02T03:41:50Z
+Stopped at: Completed 02-session-engine/02-04-PLAN.md
 Resume file: None
