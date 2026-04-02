@@ -27,7 +27,7 @@ async function showTerminal() {
   document.getElementById('terminal-view').hidden = false;
 
   const response = await apiFetch('/sessions');
-  const sessions = await response.json();
+  const sessions = await response.json().catch(() => []);
 
   document.getElementById('tab-list').innerHTML = '';
   document.getElementById('terminal-panels').innerHTML = '';
