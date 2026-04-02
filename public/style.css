@@ -1,4 +1,6 @@
 /* Reset and base */
+[hidden] { display: none !important; }
+
 * {
   box-sizing: border-box;
   margin: 0;
