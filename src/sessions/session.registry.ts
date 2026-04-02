@@ -1,6 +1,16 @@
 import * as pty from 'node-pty';
 import { v4 as uuidv4 } from 'uuid';
+import { execSync } from 'child_process';
 import { SessionRecord, toListItem, SessionListItem } from './session.types';
+
+function resolveCmd(cmd: string): string {
+  if (process.platform === 'win32') {
+    try {
+      return execSync(`where ${cmd}`, { encoding: 'utf8' }).trim().split('\n')[0].trim();
+    } catch { return cmd; }
+  }
+  return cmd;
+}
 
 // Singleton registry — PTY lifetime is owned here, not by any request handler.
 // Module-level Map persists for the lifetime of the Node process (implements SESS-02).
@@ -15,7 +25,7 @@ export const registry = new Map<string, SessionRecord>();
  */
 export function createSession(cwd: string): SessionRecord {
   const id = uuidv4();
-  const claudeCmd = process.env.CLAUDE_CMD ?? 'claude';
+  const claudeCmd = resolveCmd(process.env.CLAUDE_CMD ?? 'claude');
 
   // Sanitized env — inherited env MUST be cleaned before passing to PTY spawn.
   // SSH vars cause Claude Code detectTerminal() to return 'ssh-session' fallback.
