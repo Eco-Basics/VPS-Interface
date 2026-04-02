@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Backend Foundation** - Auth, PTY spawning, and in-memory session registry (completed 2026-04-01)
 - [x] **Phase 2: Session Engine** - WebSocket bridge, ring buffer, reconnect, and session management API (completed 2026-04-02)
-- [ ] **Phase 3: Terminal UI** - xterm.js frontend, tab management, and responsive layout
+- [x] **Phase 3: Terminal UI** - xterm.js frontend, tab management, and responsive layout (completed 2026-04-02)
 - [ ] **Phase 4: Shell & Launcher** - Bash shell tab, saved directories, and session naming
 
 ## Phase Details
@@ -78,5 +78,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Backend Foundation | 4/4 | Complete    | 2026-04-01 |
 | 2. Session Engine | 4/4 | Complete   | 2026-04-02 |
-| 3. Terminal UI | 2/4 | In Progress|  |
+| 3. Terminal UI | 4/4 | Complete   | 2026-04-02 |
 | 4. Shell & Launcher | 0/TBD | Not started | - |
