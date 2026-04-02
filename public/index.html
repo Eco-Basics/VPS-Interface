@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claude VPS Interface</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Login view -->
+  <div id="login-view">
+    <div class="login-card">
+      <h1>Claude VPS</h1>
+      <form id="login-form">
+        <input id="password-input" type="password" placeholder="Password" autocomplete="current-password" required>
+        <button type="submit">Sign in</button>
+        <p id="login-error" class="login-error" hidden></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Terminal view (hidden until authenticated) -->
+  <div id="terminal-view" hidden>
+
+    <!-- Tab bar -->
+    <div class="tab-bar" id="tab-bar">
+      <button id="new-session-btn" class="new-session-btn" onclick="newSession()">+ New Session</button>
+    </div>
+
+    <!-- Terminal panels are injected here by app.js -->
+    <div id="terminals-container"></div>
+
+    <!-- Mobile toolbar -->
+    <div id="mobile-toolbar" class="mobile-toolbar">
+      <button data-key="ctrl-c">Ctrl+C</button>
+      <button data-key="esc">Esc</button>
+      <button data-key="tab">Tab</button>
+      <button data-key="up">&#8593;</button>
+      <button data-key="down">&#8595;</button>
+      <button data-key="keyboard">Keyboard</button>
+    </div>
+
+  </div>
+
+  <!-- New session modal (hidden until triggered) -->
+  <div id="new-session-modal" hidden>
+    <div class="modal-overlay">
+      <div class="modal-card">
+        <h2>New Session</h2>
+        <form id="new-session-form">
+          <label for="cwd-input">Working Directory</label>
+          <input id="cwd-input" type="text" placeholder="/home/user" value="">
+          <p id="modal-error" class="modal-error" hidden></p>
+          <div class="modal-actions">
+            <button type="button" id="modal-cancel-btn">Cancel</button>
+            <button type="submit">Start Session</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
