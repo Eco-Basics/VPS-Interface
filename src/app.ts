@@ -1,4 +1,5 @@
 import express, { Application } from 'express';
+import path from 'path';
 import bcrypt from 'bcrypt';
 import { requireAuth } from './auth/auth.middleware';
 import { createAuthRouter } from './auth/auth.router';
@@ -19,6 +20,9 @@ export async function createApp(): Promise<Application> {
 
   const app = express();
   app.use(express.json());
+
+  // Static frontend — served publicly before any auth middleware
+  app.use(express.static(path.join(process.cwd(), 'public')));
 
   // Auth route — exempt from JWT middleware (must come BEFORE requireAuth)
   app.use('/auth', createAuthRouter(passwordHash));
