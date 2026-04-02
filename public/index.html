@@ -41,6 +41,7 @@
       <button data-key="up">&#8593;</button>
       <button data-key="down">&#8595;</button>
       <button data-key="keyboard">Keyboard</button>
+      <button data-key="copy">Copy</button>
     </div>
 
   </div>
@@ -58,6 +59,11 @@
             <label><input type="radio" name="session-type" value="claude" checked> Claude</label>
             <label><input type="radio" name="session-type" value="bash"> Bash</label>
           </fieldset>
+          <label class="checkbox-row">
+            <input type="checkbox" id="save-dir-checkbox">
+            <span>Save directory</span>
+          </label>
+          <div id="saved-dirs-list" class="saved-dirs-list"></div>
           <p id="modal-error" class="modal-error" hidden></p>
           <div class="modal-actions">
             <button type="button" id="new-session-cancel">Cancel</button>

@@ -123,7 +123,7 @@ html, body {
   background: #333;
 }
 
-.tab-close {
+.close-btn {
   background: none;
   border: none;
   color: #888;
@@ -133,7 +133,7 @@ html, body {
   line-height: 1;
 }
 
-.tab-close:hover {
+.close-btn:hover {
   color: #e05555;
 }
 
@@ -173,7 +173,7 @@ html, body {
 }
 
 /* Terminal panels */
-#terminals-container {
+#terminal-panels {
   flex: 1;
   overflow: hidden;
   position: relative;
@@ -307,6 +307,10 @@ html, body {
   color: #e05555;
   font-size: 0.875rem;
 }
+
+.saved-dir-item { display: flex; align-items: center; gap: 8px; }
+.launch-dir-btn { }
+.remove-dir-btn { }
 
 .modal-actions {
   display: flex;

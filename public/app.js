@@ -8,6 +8,8 @@ const state = {
   token: localStorage.getItem('vps_jwt'),
   sessions: [],        // Array of session records — see shape below
   activeSessionId: null,
+  nextSessionNumber: 1,
+  sessionCounter: 0,   // Monotonically incrementing — never reuses numbers after tab close
 };
 
 // Session record shape (all fields present from creation):
@@ -16,6 +18,42 @@ const state = {
 // ---------------------------------------------------------------------------
 // View helpers
 // ---------------------------------------------------------------------------
+
+function loadSavedDirs() {
+  try {
+    const raw = localStorage.getItem('vps_saved_dirs');
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveDirToStorage(dir) {
+  const dirs = loadSavedDirs();
+  if (!dirs.includes(dir)) {
+    dirs.push(dir);
+    localStorage.setItem('vps_saved_dirs', JSON.stringify(dirs));
+  }
+}
+
+function removeSavedDir(dir) {
+  const dirs = loadSavedDirs().filter((item) => item !== dir);
+  localStorage.setItem('vps_saved_dirs', JSON.stringify(dirs));
+}
+
+function renderSavedDirs() {
+  const dirs = loadSavedDirs();
+  const listEl = document.getElementById('saved-dirs-list');
+  listEl.innerHTML = dirs.map((dir) => `
+    <div class="saved-dir-item" data-dir="${dir}">
+      <span class="saved-dir-path">${dir}</span>
+      <button type="button" class="launch-dir-btn" data-action="launch" data-dir="${dir}">Launch</button>
+      <button type="button" class="remove-dir-btn" data-action="remove" data-dir="${dir}">Remove</button>
+    </div>
+  `).join('');
+}
 
 function showLogin() {
   document.getElementById('login-view').hidden = false;
@@ -33,9 +71,12 @@ async function showTerminal() {
   document.getElementById('terminal-panels').innerHTML = '';
   state.sessions = [];
 
-  sessions.forEach((session) => {
-    createTab(session);
-  });
+  sessions
+    .filter((session) => session.status === 'running')
+    .forEach((session) => {
+      const record = createTab(session);
+      connectWebSocket(record);
+    });
 }
 
 function clearAuthAndRedirect() {
@@ -195,6 +236,27 @@ document.getElementById('mobile-toolbar').addEventListener('click', (event) => {
     return;
   }
 
+  if (button.dataset.key === 'copy') {
+    // Use existing selection if any, otherwise select all visible content
+    let text = activeSession.terminal.getSelection();
+    if (!text) {
+      activeSession.terminal.selectAll();
+      text = activeSession.terminal.getSelection();
+      activeSession.terminal.clearSelection();
+    }
+    if (text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = button.textContent;
+        button.textContent = 'Copied!';
+        setTimeout(() => { button.textContent = orig; }, 1200);
+      }).catch(() => {
+        button.textContent = 'Failed';
+        setTimeout(() => { button.textContent = 'Copy'; }, 1200);
+      });
+    }
+    return;
+  }
+
   const data = sequences[button.dataset.key];
   if (!data) return;
 
@@ -218,14 +280,50 @@ function createTab(session) {
   const fitAddon = new FitAddon.FitAddon();
   terminal.loadAddon(fitAddon);
 
+  const defaultLabel = session.command === 'bash' ? 'Shell' : `Session ${state.nextSessionNumber++}`;
+  const label = session.label || session.name || defaultLabel;
+
   const tabEl = document.createElement('button');
-  tabEl.className = 'tab';
+  tabEl.className = 'tab-item';
   tabEl.dataset.sessionId = session.id;
   tabEl.innerHTML = `
     <span class="status-dot ${session.status || 'running'}"></span>
-    <span class="tab-label">${session.label || session.name || `Session ${state.sessions.length + 1}`}</span>
+    <span class="tab-label">${label}</span>
     <span class="close-btn" role="button" aria-label="Close tab">×</span>
   `;
+
+  const labelEl = tabEl.querySelector('.tab-label');
+
+  labelEl.addEventListener('dblclick', () => {
+    labelEl.dataset.originalValue = labelEl.textContent.trim();
+    labelEl.contentEditable = 'true';
+    labelEl.focus();
+    const range = document.createRange();
+    range.selectNodeContents(labelEl);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  });
+
+  labelEl.addEventListener('blur', () => {
+    const value = labelEl.textContent.trim();
+    labelEl.textContent = value || labelEl.dataset.originalValue || 'Session';
+    labelEl.contentEditable = 'false';
+  });
+
+  labelEl.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      labelEl.blur();
+      return;
+    }
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      labelEl.textContent = labelEl.dataset.originalValue || labelEl.textContent;
+      labelEl.contentEditable = 'false';
+      labelEl.blur();
+    }
+  });
 
   const wrapperEl = document.createElement('div');
   wrapperEl.className = 'terminal-wrapper inactive';
@@ -240,7 +338,7 @@ function createTab(session) {
 
   const record = {
     ...session,
-    label: session.label || session.name || `Session ${state.sessions.length + 1}`,
+    label: label,
     status: session.status || 'running',
     terminal,
     fitAddon,
@@ -307,6 +405,7 @@ async function closeTab(sessionId) {
 }
 
 function newSession() {
+  renderSavedDirs();
   document.getElementById('new-session-modal').hidden = false;
 }
 
@@ -319,7 +418,12 @@ document.getElementById('new-session-form').addEventListener('submit', async (ev
 
   const cwd = document.getElementById('cwd-input').value.trim();
   const shellType = document.querySelector('input[name="session-type"]:checked')?.value;
+  const saveDir = document.getElementById('save-dir-checkbox').checked;
   const body = shellType === 'bash' ? { cwd, command: 'bash' } : { cwd };
+
+  if (saveDir) {
+    saveDirToStorage(cwd);
+  }
 
   const response = await apiFetch('/sessions', {
     method: 'POST',
@@ -334,6 +438,25 @@ document.getElementById('new-session-form').addEventListener('submit', async (ev
   const record = createTab(data);
   document.getElementById('new-session-modal').hidden = true;
   connectWebSocket(record);
+});
+
+document.getElementById('saved-dirs-list').addEventListener('click', (event) => {
+  const button = event.target.closest('[data-action]');
+  if (!button) return;
+
+  const { action, dir } = button.dataset;
+  if (!dir) return;
+
+  if (action === 'launch') {
+    newSession();
+    document.getElementById('cwd-input').value = dir;
+    return;
+  }
+
+  if (action === 'remove') {
+    removeSavedDir(dir);
+    renderSavedDirs();
+  }
 });
 
 // ---------------------------------------------------------------------------
