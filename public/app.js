@@ -77,12 +77,74 @@ async function apiFetch(path, options = {}) {
 }
 
 // ---------------------------------------------------------------------------
-// WebSocket stub (implemented in plan 03-04)
+// WebSocket (implemented in plan 03-04)
 // ---------------------------------------------------------------------------
 
-function connectWebSocket(record) {
-  // Stub — implemented in plan 03-04
-  void record;
+function updateTabStatus(sessionId, status) {
+  const session = state.sessions.find((item) => item.id === sessionId);
+  if (!session) return;
+
+  session.status = status;
+  const dot = session.tabEl.querySelector('.status-dot');
+  if (dot) {
+    dot.className = `status-dot ${status}`;
+  }
+}
+
+function connectWebSocket(session) {
+  const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const ws = new WebSocket(
+    `${wsProtocol}//${location.host}/sessions/${session.id}/ws?token=${encodeURIComponent(state.token)}`
+  );
+
+  session.ws = ws;
+
+  ws.onopen = () => {
+    updateTabStatus(session.id, 'running');
+    session.fitAddon.fit();
+    ws.send(JSON.stringify({
+      type: 'resize',
+      cols: session.terminal.cols,
+      rows: session.terminal.rows,
+    }));
+  };
+
+  ws.onmessage = (event) => {
+    try {
+      const message = JSON.parse(event.data);
+
+      if (message.type === 'output') {
+        clearTimeout(session.idleTimer);
+        session.terminal.write(message.data);
+        updateTabStatus(session.id, 'running');
+        session.idleTimer = setTimeout(() => updateTabStatus(session.id, 'idle'), 5000);
+        return;
+      }
+
+      if (message.type === 'exit') {
+        clearTimeout(session.idleTimer);
+        session.idleTimer = null;
+        updateTabStatus(session.id, 'exited');
+        session.terminal.write(`\r\n[Session exited: ${message.exitCode ?? 'unknown'}]\r\n`);
+        return;
+      }
+    } catch {
+      clearTimeout(session.idleTimer);
+      session.terminal.write(event.data);
+      updateTabStatus(session.id, 'running');
+      session.idleTimer = setTimeout(() => updateTabStatus(session.id, 'idle'), 5000);
+    }
+  };
+
+  ws.onclose = () => {
+    updateTabStatus(session.id, session.status === 'exited' ? 'exited' : 'idle');
+  };
+
+  session.terminal.onData((data) => {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'input', data }));
+    }
+  });
 }
 
 // ---------------------------------------------------------------------------
