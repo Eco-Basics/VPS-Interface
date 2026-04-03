@@ -32,10 +32,18 @@ Full Claude Code interactivity from any device, anywhere — spawn sessions in p
 
 ### Active
 
-- [ ] Split-pane view — two sessions side by side (UI-01)
-- [ ] Session recording and playback (UI-02)
-- [ ] Session registry survives server restart (RESIL-01)
-- [ ] Session TTL/idle-timeout with auto-cleanup (RESIL-02)
+- [ ] VPS environment ready — Node.js, git, Claude Code installed (DEPLOY-01)
+- [ ] App deployed and running on VPS (DEPLOY-02)
+- [ ] Caddy configured for HTTPS reverse proxy with auto-TLS (DEPLOY-03)
+- [ ] pm2 keeps server alive across reboots and crashes (DEPLOY-04)
+- [ ] Deploy script automates future updates (DEPLOY-05)
+
+### Deferred (v1.2+)
+
+- Split-pane view — two sessions side by side (UI-01)
+- Session recording and playback (UI-02)
+- Session registry survives server restart (RESIL-01)
+- Session TTL/idle-timeout with auto-cleanup (RESIL-02)
 
 ### Out of Scope
 
@@ -72,7 +80,7 @@ Known issues / tech debt:
 | xterm.js for rendering | Same engine as VS Code terminal; handles all ANSI; mobile-compatible | ✓ Good |
 | Vanilla JS frontend (not React/Vue) | No build pipeline; simpler deployment; UI scope is small | ✓ Good — manageable at 400 LOC |
 | ws library (not socket.io) | Raw WebSocket sufficient; socket.io abstractions unneeded; smaller bundle | ✓ Good |
-| Caddy reverse proxy (not nginx) | Auto-HTTPS via Let's Encrypt with zero config | — Pending deployment |
+| Caddy reverse proxy (not nginx) | Auto-HTTPS via Let's Encrypt with zero config | ◆ v1.1 deployment |
 | ALLOWED_COMMANDS allowlist for bash | Security: explicit opt-in, not denylist | ✓ Good |
 | Auto-numbered tabs (not inline rename) | Simpler UX; rename adds double-click interaction with no clear affordance | ✓ Good — user preferred |
 | Status dots: green/red/grey | red=input required, grey=exited — clearer than yellow | ✓ Good — validated in UAT |
@@ -84,5 +92,16 @@ Known issues / tech debt:
 - **Security**: Password login → JWT; HTTPS required; no unauthenticated access
 - **Compatibility**: All Claude Code interactive prompt types must work — real PTY, not a pipe
 
+## Current Milestone: v1.1 VPS Deployment
+
+**Goal:** Deploy the app to a real VPS — accessible via HTTPS, always-on via pm2, and updatable via a single script.
+
+**Target features:**
+- VPS environment setup (Node.js, git, Claude Code)
+- App deployed and running
+- Caddy reverse proxy with auto-HTTPS
+- pm2 process management
+- Repeatable deploy script
+
 ---
-*Last updated: 2026-04-03 after v1.0 milestone shipped*
+*Last updated: 2026-04-03 after v1.1 milestone started*
