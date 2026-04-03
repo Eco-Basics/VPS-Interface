@@ -165,11 +165,11 @@ html, body {
 }
 
 .status-dot.idle {
-  background: #ccaa22;
+  background: #cc4444;
 }
 
 .status-dot.exited {
-  background: #cc4444;
+  background: #666666;
 }
 
 /* Terminal panels */

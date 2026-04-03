@@ -9,6 +9,7 @@ const state = {
   sessions: [],        // Array of session records — see shape below
   activeSessionId: null,
   nextSessionNumber: 1,
+  nextShellNumber: 1,
   sessionCounter: 0,   // Monotonically incrementing — never reuses numbers after tab close
 };
 
@@ -49,7 +50,7 @@ function renderSavedDirs() {
   listEl.innerHTML = dirs.map((dir) => `
     <div class="saved-dir-item" data-dir="${dir}">
       <span class="saved-dir-path">${dir}</span>
-      <button type="button" class="launch-dir-btn" data-action="launch" data-dir="${dir}">Launch</button>
+      <button type="button" class="launch-dir-btn" data-action="launch" data-dir="${dir}">Use</button>
       <button type="button" class="remove-dir-btn" data-action="remove" data-dir="${dir}">Remove</button>
     </div>
   `).join('');
@@ -280,7 +281,7 @@ function createTab(session) {
   const fitAddon = new FitAddon.FitAddon();
   terminal.loadAddon(fitAddon);
 
-  const defaultLabel = session.command === 'bash' ? 'Shell' : `Session ${state.nextSessionNumber++}`;
+  const defaultLabel = session.command === 'bash' ? `Shell ${state.nextShellNumber++}` : `Session ${state.nextSessionNumber++}`;
   const label = session.label || session.name || defaultLabel;
 
   const tabEl = document.createElement('button');
