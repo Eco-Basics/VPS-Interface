@@ -10,6 +10,7 @@ export interface SessionRecord {
   pid: number;
   pty: pty.IPty;
   cwd: string;
+  command: string;
   createdAt: Date;
   status: 'running' | 'exited';
   /** Ring buffer of PTY output chunks, capped at 1000 entries for reconnect replay. */
@@ -26,6 +27,7 @@ export interface SessionListItem {
   id: string;
   pid: number;
   cwd: string;
+  command: string;
   createdAt: string; // ISO 8601 string for JSON serialization
   status: 'running' | 'exited';
 }
@@ -38,6 +40,7 @@ export function toListItem(record: SessionRecord): SessionListItem {
     id: record.id,
     pid: record.pid,
     cwd: record.cwd,
+    command: record.command,
     createdAt: record.createdAt.toISOString(),
     status: record.status,
   };

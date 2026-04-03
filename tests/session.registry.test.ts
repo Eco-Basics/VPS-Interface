@@ -68,11 +68,11 @@ describe('createSession', () => {
 });
 
 describe('killSession', () => {
-  test('calls pty.kill with SIGTERM', () => {
+  test('calls pty.kill to terminate the process', () => {
     const record = createSession('/home/user/project');
     const mockPty = record.pty as unknown as ReturnType<typeof makeMockPty>;
     killSession(record.id);
-    expect(mockPty.kill).toHaveBeenCalledWith('SIGTERM');
+    expect(mockPty.kill).toHaveBeenCalled();
   });
 
   test('returns true for a running session', () => {
@@ -80,7 +80,8 @@ describe('killSession', () => {
     expect(killSession(record.id)).toBe(true);
   });
 
-  test('schedules SIGKILL after 5000ms if process has not exited', () => {
+  test('on non-Windows: schedules SIGKILL after 5000ms if process has not exited', () => {
+    if (process.platform === 'win32') return; // Windows uses kill() without signals
     const record = createSession('/home/user/project');
     const mockPty = record.pty as unknown as ReturnType<typeof makeMockPty>;
     killSession(record.id);
@@ -89,7 +90,8 @@ describe('killSession', () => {
     expect(mockPty.kill).toHaveBeenCalledWith('SIGKILL');
   });
 
-  test('does NOT call SIGKILL if process exited before timeout', () => {
+  test('on non-Windows: does NOT call SIGKILL if process exited before timeout', () => {
+    if (process.platform === 'win32') return; // Windows uses kill() without signals
     const record = createSession('/home/user/project');
     const mockPty = record.pty as unknown as ReturnType<typeof makeMockPty>;
     killSession(record.id);

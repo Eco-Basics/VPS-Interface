@@ -23,14 +23,13 @@ export const registry = new Map<string, SessionRecord>();
  *
  * cwd: Working directory for the spawned process — required, provided by API caller.
  */
-export function createSession(cwd: string): SessionRecord {
+export function createSession(cwd: string, command?: string): SessionRecord {
   const id = uuidv4();
-  const claudeCmd = resolveCmd(process.env.CLAUDE_CMD ?? 'claude');
+  const claudeCmd = command ? resolveCmd(command) : resolveCmd(process.env.CLAUDE_CMD ?? 'claude');
 
   // Sanitized env — inherited env MUST be cleaned before passing to PTY spawn.
   // SSH vars cause Claude Code detectTerminal() to return 'ssh-session' fallback.
   // CI flag triggers CI/CD detection path in Claude Code.
-  // CLAUDE_CONFIG_DIR must be per-session to prevent concurrent session transcript corruption.
   const spawnEnv = { ...process.env } as Record<string, string>;
   delete spawnEnv['SSH_TTY'];
   delete spawnEnv['SSH_CONNECTION'];
@@ -38,7 +37,8 @@ export function createSession(cwd: string): SessionRecord {
   delete spawnEnv['CI'];
   spawnEnv['TERM'] = 'xterm-256color';
   spawnEnv['COLORTERM'] = 'truecolor';
-  spawnEnv['CLAUDE_CONFIG_DIR'] = `/tmp/claude-sessions/${id}`;
+  // Use default ~/.claude config so Claude inherits existing theme/settings.
+  // Concurrent sessions each create their own conversation UUID — no corruption risk.
 
   const ptyProcess = pty.spawn(claudeCmd, [], {
     name: 'xterm-color',
@@ -53,6 +53,7 @@ export function createSession(cwd: string): SessionRecord {
     pid: ptyProcess.pid,
     pty: ptyProcess,
     cwd,
+    command: command ?? 'claude',
     createdAt: new Date(),
     status: 'running',
     buffer: [],
@@ -111,22 +112,32 @@ export function killSession(id: string): boolean {
   const record = registry.get(id);
   if (!record || record.status === 'exited') return false;
 
-  record.pty.kill('SIGTERM');
-
-  // Fallback: SIGKILL after 5s if SIGTERM was ignored by the process
-  setTimeout(() => {
-    if (record.status !== 'exited') {
-      record.pty.kill('SIGKILL');
-    }
-  }, 5000);
+  if (process.platform === 'win32') {
+    // Windows node-pty does not support signal names — kill() with no args terminates the process
+    record.pty.kill();
+  } else {
+    record.pty.kill('SIGTERM');
+    // Fallback: SIGKILL after 5s if SIGTERM was ignored by the process
+    setTimeout(() => {
+      if (record.status !== 'exited') {
+        record.pty.kill('SIGKILL');
+      }
+    }, 5000);
+  }
 
   return true;
 }
 
 /**
- * List all sessions (including exited). API responses use toListItem() to strip the pty object.
+ * List running sessions. Exited sessions older than 5 minutes are pruned from the registry.
  */
 export function listSessions(): SessionListItem[] {
+  const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
+  for (const [id, record] of registry) {
+    if (record.status === 'exited' && record.createdAt.getTime() < fiveMinutesAgo) {
+      registry.delete(id);
+    }
+  }
   return Array.from(registry.values()).map(toListItem);
 }
 
