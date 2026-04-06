@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: VPS Deployment
 status: unknown
-stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-04-06T09:59:24.835Z"
+stopped_at: Completed 05-04-PLAN.md
+last_updated: "2026-04-06T15:01:08.829Z"
 progress:
   total_phases: 1
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 4
+  completed_plans: 4
 ---
 
 # State: Claude VPS Interface
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 05 (vps-deployment) — EXECUTING
-Plan: 2 of 3
+Plan: 1 of 4
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Plan: 2 of 3
 | Phase 05-vps-deployment P01 | 5min | 2 tasks | 2 files |
 | Phase 05-vps-deployment P02 | 3min | 2 tasks | 2 files |
 | Phase 05-vps-deployment P03 | 3min | 2 tasks | 2 files |
+| Phase 05-vps-deployment P04 | 3min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -108,6 +109,8 @@ Recent decisions affecting current work:
 - [Phase 05-vps-deployment]: pm2 instances: 1 — PTY sessions are stateful in-memory, cannot share across cluster workers
 - [Phase 05-vps-deployment]: deploy.sh uses set -euo pipefail — build failure exits before pm2 reload, running process stays up
 - [Phase 05-vps-deployment]: Caddy tls internal self-signed cert — no domain required; browser exception needed once per browser
+- [Phase 05-vps-deployment]: npm rebuild runs on every deploy to prevent silent ABI mismatch after Node.js upgrades on VPS
+- [Phase 05-vps-deployment]: set -euo pipefail in deploy.sh ensures npm rebuild failure exits before pm2 reload — running process stays up on failed deploy
 
 ### Pending Todos
 
@@ -119,6 +122,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-06T09:59:24.831Z
-Stopped at: Completed 05-03-PLAN.md
+Last session: 2026-04-06T15:01:08.824Z
+Stopped at: Completed 05-04-PLAN.md
 Resume file: None
