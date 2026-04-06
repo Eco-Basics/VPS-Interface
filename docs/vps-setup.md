@@ -50,9 +50,12 @@ The `.env` file is set-and-forget. The deploy script does NOT modify it.
 ## 4. Build the app
 
     npm ci
+    npm rebuild
     npm run build
 
-This compiles TypeScript to `dist/`. Requires all dependencies including devDependencies (TypeScript compiler).
+`npm ci` installs dependencies from package-lock.json. `npm rebuild` recompiles native modules (node-pty, bcrypt) against the Node.js ABI on this machine — required so native binaries match the installed Node.js version. `npm run build` compiles TypeScript to `dist/`.
+
+Run `npm rebuild` any time the Node.js version changes on the VPS (e.g., after `apt upgrade nodejs`). The deploy script (deploy.sh) runs it automatically on every deploy.
 
 ## 5. Configure pm2
 
