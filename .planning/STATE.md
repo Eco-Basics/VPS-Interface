@@ -2,15 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: VPS Deployment
-status: planning
-stopped_at: Phase 5 context gathered
-last_updated: "2026-04-06T09:22:59.352Z"
-last_activity: 2026-04-06 — Phase 5 added to roadmap, ready for planning
+status: unknown
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-04-06T09:45:40.475Z"
 progress:
   total_phases: 1
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 3
+  completed_plans: 1
 ---
 
 # State: Claude VPS Interface
@@ -20,14 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Full Claude Code interactivity from any device, anywhere
-**Current focus:** Phase 05 — VPS Deployment
+**Current focus:** Phase 05 — vps-deployment
 
 ## Current Position
 
-Phase: 5 of 5 (Phase 5: VPS Deployment)
-Plan: —
-Status: Ready to plan
-Last activity: 2026-04-06 — Phase 5 added to roadmap, ready for planning
+Phase: 05 (vps-deployment) — EXECUTING
+Plan: 1 of 3
 
 ## Performance Metrics
 
@@ -59,6 +56,7 @@ Last activity: 2026-04-06 — Phase 5 added to roadmap, ready for planning
 | Phase 03-terminal-ui P02 | 2m | 1 tasks | 0 files |
 | Phase 03-terminal-ui P03 | 5min | 2 tasks | 2 files |
 | Phase 03-terminal-ui P04 | 4m | 4 tasks | 1 files |
+| Phase 05-vps-deployment P01 | 5min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -99,6 +97,9 @@ Recent decisions affecting current work:
 - [Phase 03-terminal-ui]: apiFetch extended to set Content-Type for string bodies; init() delegates session fetching to async showTerminal()
 - [Phase 03-terminal-ui]: resizeTimer scoped at module level (not per-session) so only one global debounce runs
 - [Phase 03-terminal-ui]: Mobile toolbar uses event delegation rather than per-button listeners
+- [Phase 05-vps-deployment]: setup.sh excludes port 3000 from ufw — Caddy proxies internally; never public-facing
+- [Phase 05-vps-deployment]: Node.js 20 installed via NodeSource setup_20.x — pins major version for reproducibility
+- [Phase 05-vps-deployment]: Claude Code installation linked to Anthropic docs URL but not scripted — external install procedure
 
 ### Pending Todos
 
@@ -110,6 +111,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-06T09:22:59.347Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-vps-deployment/05-CONTEXT.md
+Last session: 2026-04-06T09:45:40.471Z
+Stopped at: Completed 05-01-PLAN.md
+Resume file: None
