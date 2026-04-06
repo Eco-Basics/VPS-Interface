@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: VPS Deployment
 status: unknown
-stopped_at: Completed 05-02-PLAN.md
-last_updated: "2026-04-06T09:51:00Z"
+stopped_at: Completed 05-03-PLAN.md
+last_updated: "2026-04-06T09:59:24.835Z"
 progress:
   total_phases: 1
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # State: Claude VPS Interface
@@ -58,6 +58,7 @@ Plan: 2 of 3
 | Phase 03-terminal-ui P04 | 4m | 4 tasks | 1 files |
 | Phase 05-vps-deployment P01 | 5min | 2 tasks | 2 files |
 | Phase 05-vps-deployment P02 | 3min | 2 tasks | 2 files |
+| Phase 05-vps-deployment P03 | 3min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -105,6 +106,8 @@ Recent decisions affecting current work:
 - [Phase 05-vps-deployment]: pm2 script: node + args: dist/src/server.js — avoids npm subprocess layer; pm2 signals go directly to node process
 - [Phase 05-vps-deployment]: Secrets NOT in pm2 env block — dotenv loads them from .env at server.ts startup
 - [Phase 05-vps-deployment]: pm2 instances: 1 — PTY sessions are stateful in-memory, cannot share across cluster workers
+- [Phase 05-vps-deployment]: deploy.sh uses set -euo pipefail — build failure exits before pm2 reload, running process stays up
+- [Phase 05-vps-deployment]: Caddy tls internal self-signed cert — no domain required; browser exception needed once per browser
 
 ### Pending Todos
 
@@ -116,6 +119,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-06T09:51:00Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-04-06T09:59:24.831Z
+Stopped at: Completed 05-03-PLAN.md
 Resume file: None
