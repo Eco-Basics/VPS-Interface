@@ -27,7 +27,7 @@ Full archive: `.planning/milestones/v1.0-ROADMAP.md`
 | 2. Session Engine | v1.0 | 4/4 | Complete | 2026-04-02 |
 | 3. Terminal UI | v1.0 | 4/4 | Complete | 2026-04-02 |
 | 4. Shell & Launcher | v1.0 | 2/2 | Complete | 2026-04-03 |
-| 5. VPS Deployment | 1/3 | In Progress|  | — |
+| 5. VPS Deployment | 2/3 | In Progress|  | — |
 
 ### Phase 5: VPS Deployment
 
@@ -35,7 +35,7 @@ Full archive: `.planning/milestones/v1.0-ROADMAP.md`
 
 **Requirements**: DEPLOY-01, DEPLOY-02, DEPLOY-03, DEPLOY-04, DEPLOY-05
 **Depends on:** Phase 4 (v1.0 complete)
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 
 Plans:
 - [ ] 05-01-PLAN.md — VPS provisioning: setup.sh + docs/vps-setup.md (DEPLOY-01)

@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: VPS Deployment
 status: unknown
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-04-06T09:45:40.475Z"
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-04-06T09:51:00Z"
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # State: Claude VPS Interface
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 05 (vps-deployment) — EXECUTING
-Plan: 1 of 3
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Plan: 1 of 3
 | Phase 03-terminal-ui P03 | 5min | 2 tasks | 2 files |
 | Phase 03-terminal-ui P04 | 4m | 4 tasks | 1 files |
 | Phase 05-vps-deployment P01 | 5min | 2 tasks | 2 files |
+| Phase 05-vps-deployment P02 | 3min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -100,6 +101,10 @@ Recent decisions affecting current work:
 - [Phase 05-vps-deployment]: setup.sh excludes port 3000 from ufw — Caddy proxies internally; never public-facing
 - [Phase 05-vps-deployment]: Node.js 20 installed via NodeSource setup_20.x — pins major version for reproducibility
 - [Phase 05-vps-deployment]: Claude Code installation linked to Anthropic docs URL but not scripted — external install procedure
+- [Phase 05-vps-deployment]: pm2 app name is exactly 'claude-vps-interface' — must match deploy.sh pm2 reload target in plan 03
+- [Phase 05-vps-deployment]: pm2 script: node + args: dist/src/server.js — avoids npm subprocess layer; pm2 signals go directly to node process
+- [Phase 05-vps-deployment]: Secrets NOT in pm2 env block — dotenv loads them from .env at server.ts startup
+- [Phase 05-vps-deployment]: pm2 instances: 1 — PTY sessions are stateful in-memory, cannot share across cluster workers
 
 ### Pending Todos
 
@@ -111,6 +116,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-06T09:45:40.471Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-04-06T09:51:00Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None
