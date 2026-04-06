@@ -7,8 +7,9 @@ set -euo pipefail
 # What this does:
 #   1. Pull latest code from git
 #   2. Install/update dependencies (npm ci — reproducible, uses package-lock.json)
-#   3. Compile TypeScript (npm run build → dist/)
-#   4. Zero-downtime reload via pm2 (new process starts before old one dies)
+#   3. Recompile native modules for current Node.js ABI (npm rebuild)
+#   4. Compile TypeScript (npm run build → dist/)
+#   5. Zero-downtime reload via pm2 (new process starts before old one dies)
 #
 # What this does NOT do:
 #   - Touch environment secrets (set-and-forget after initial setup)
@@ -20,16 +21,19 @@ APP_NAME="claude-vps-interface"
 echo "=== Deploy: $APP_NAME ==="
 echo ""
 
-echo "[1/4] Pulling latest code..."
+echo "[1/5] Pulling latest code..."
 git pull
 
-echo "[2/4] Installing dependencies..."
+echo "[2/5] Installing dependencies..."
 npm ci
 
-echo "[3/4] Building..."
+echo "[3/5] Rebuilding native modules..."
+npm rebuild
+
+echo "[4/5] Building..."
 npm run build
 
-echo "[4/4] Reloading pm2 process (zero-downtime)..."
+echo "[5/5] Reloading pm2 process (zero-downtime)..."
 pm2 reload "$APP_NAME"
 
 echo ""
